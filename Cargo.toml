@@ -1,0 +1,17 @@
+[workspace]
+resolver = "3"
+members = ["day-*"]
+
+[workspace.package]
+edition = "2024"
+rust-version = "1.91.0"
+
+[workspace.dependencies]
+dhat = "0.3.3"
+
+[workspace.lints.clippy]
+pedantic = "warn"
+
+[profile.dhat]
+inherits = "release"
+debug = 1

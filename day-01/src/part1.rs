@@ -111,26 +111,30 @@ fn solve(input: &[u8]) -> i32 {
     player.manhattan_distance()
 }
 
-#[test]
-fn test_1() {
-    let result = solve(b"R2, L3");
-    assert_eq!(result, 5);
-}
+#[cfg(test)]
+mod tests {
+    use super::solve;
+    #[test]
+    fn test_1() {
+        let result = solve(b"R2, L3");
+        assert_eq!(result, 5);
+    }
 
-#[test]
-fn test_2() {
-    let result = solve(b"R2, R2, R2");
-    assert_eq!(result, 2);
-}
+    #[test]
+    fn test_2() {
+        let result = solve(b"R2, R2, R2");
+        assert_eq!(result, 2);
+    }
 
-#[test]
-fn test_3() {
-    let result = solve(b"R5, L5, R5, R3");
-    assert_eq!(result, 12);
-}
+    #[test]
+    fn test_3() {
+        let result = solve(b"R5, L5, R5, R3");
+        assert_eq!(result, 12);
+    }
 
-#[test]
-fn test_4() {
-    let result = solve(b"R123, L0");
-    assert_eq!(result, 123);
+    #[test]
+    fn test_4() {
+        let result = solve(b"R123, L0");
+        assert_eq!(result, 123);
+    }
 }

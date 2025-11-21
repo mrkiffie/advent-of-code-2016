@@ -6,9 +6,15 @@ rust-version = { workspace = true }
 
 [dependencies]
 dhat = { workspace = true }
+divan = { workspace = true }
 
 [features]
 dhat-heap = []
+bench = []
+
+[[bench]]
+name = "benchmark"
+harness = false
 
 [lints]
 workspace = true

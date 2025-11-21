@@ -1,15 +1,14 @@
-use std::collections::HashSet;
-
 #[cfg(feature = "dhat-heap")]
 #[global_allocator]
 static ALLOC: dhat::Alloc = dhat::Alloc;
 
-fn main() {
+const INPUT: &[u8] = include_bytes!("./input.txt");
+
+pub fn main() {
     #[cfg(feature = "dhat-heap")]
     let _profiler = dhat::Profiler::new_heap();
 
-    let input = include_bytes!("../input.txt");
-    let result = solve(input);
+    let result = solve(INPUT);
     println!("{result}");
 }
 
@@ -42,7 +41,7 @@ impl Direction {
     }
 }
 
-#[derive(Debug, Clone, Copy, Default, Hash, Eq, PartialEq)]
+#[derive(Debug, Clone, Copy, Default)]
 struct Vec2 {
     x: i32,
     y: i32,
@@ -82,9 +81,6 @@ fn solve(input: &[u8]) -> i32 {
 
     let mut player = Player::default();
 
-    let mut visited: HashSet<Vec2> = HashSet::new();
-    visited.insert(player.position);
-
     while let Some(c) = iter.next() {
         match c {
             b' ' => {
@@ -105,14 +101,7 @@ fn solve(input: &[u8]) -> i32 {
                 {
                     steps = steps * 10 + i32::from(*value) - 48;
                 }
-
-                for _ in 0..steps {
-                    player.step(1);
-                    if visited.contains(&player.position) {
-                        return player.manhattan_distance();
-                    }
-                    visited.insert(player.position);
-                }
+                player.step(steps);
             }
             _ => {
                 unreachable!();
@@ -124,22 +113,24 @@ fn solve(input: &[u8]) -> i32 {
 
 #[test]
 fn test_1() {
-    let result = solve(b"R8, R4, R4, R8");
-    assert_eq!(result, 4);
+    let result = solve(b"R2, L3");
+    assert_eq!(result, 5);
 }
 
 #[test]
 fn test_2() {
-    let result = solve(b"R2, R2, R2, R2");
-    assert_eq!(result, 0);
-    let result = solve(b"L2, L2, L2, L2");
-    assert_eq!(result, 0);
-    let result = solve(b"L10, L10, L10, L10");
-    assert_eq!(result, 0);
+    let result = solve(b"R2, R2, R2");
+    assert_eq!(result, 2);
 }
 
 #[test]
 fn test_3() {
-    let result = solve(b"R4, R3, R2, R1, R2");
-    assert_eq!(result, 6);
+    let result = solve(b"R5, L5, R5, R3");
+    assert_eq!(result, 12);
+}
+
+#[test]
+fn test_4() {
+    let result = solve(b"R123, L0");
+    assert_eq!(result, 123);
 }

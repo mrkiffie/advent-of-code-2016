@@ -1,15 +1,8 @@
 use std::collections::HashSet;
 
-#[cfg(feature = "dhat-heap")]
-#[global_allocator]
-static ALLOC: dhat::Alloc = dhat::Alloc;
-
 const INPUT: &[u8] = include_bytes!("./input.txt");
 
 pub fn main() {
-    #[cfg(feature = "dhat-heap")]
-    let _profiler = dhat::Profiler::new_heap();
-
     let result = solve(INPUT);
     println!("{result}");
 }

@@ -1,51 +1,101 @@
-use glam::IVec2;
-use std::ops::Add;
-
 const INPUT: &[u8] = include_bytes!("./input.txt");
 
 pub fn main() {
     let result = solve(INPUT);
-    println!("{result}");
+    match String::from_utf8(result) {
+        Ok(result) => println!("{result}"),
+        Err(err) => eprintln!("{err}"),
+    }
 }
 
-fn solve(input: &[u8]) -> i32 {
-    let mut pos = IVec2::ZERO;
+enum Key {
+    Key1,
+    Key2,
+    Key3,
+    Key4,
+    Key5,
+    Key6,
+    Key7,
+    Key8,
+    Key9,
+}
+
+impl Key {
+    fn to_ascii(&self) -> u8 {
+        match self {
+            Key::Key1 => b'1',
+            Key::Key2 => b'2',
+            Key::Key3 => b'3',
+            Key::Key4 => b'4',
+            Key::Key5 => b'5',
+            Key::Key6 => b'6',
+            Key::Key7 => b'7',
+            Key::Key8 => b'8',
+            Key::Key9 => b'9',
+        }
+    }
+
+    // 1 2 3
+    // 4 5 6
+    // 7 8 9
+    fn go(self, c: u8) -> Self {
+        use Key::{Key1, Key2, Key3, Key4, Key5, Key6, Key7, Key8, Key9};
+        match c {
+            b'U' => match self {
+                Key1 | Key4 => Key1,
+                Key2 | Key5 => Key2,
+                Key3 | Key6 => Key3,
+                Key7 => Key4,
+                Key8 => Key5,
+                Key9 => Key6,
+            },
+            b'D' => match self {
+                Key1 => Key4,
+                Key2 => Key5,
+                Key3 => Key6,
+                Key4 | Key7 => Key7,
+                Key5 | Key8 => Key8,
+                Key6 | Key9 => Key9,
+            },
+            b'L' => match self {
+                Key1 | Key2 => Key1,
+                Key3 => Key2,
+                Key4 | Key5 => Key4,
+                Key6 => Key5,
+                Key7 | Key8 => Key7,
+                Key9 => Key8,
+            },
+            b'R' => match self {
+                Key1 => Key2,
+                Key2 | Key3 => Key3,
+                Key4 => Key5,
+                Key5 | Key6 => Key6,
+                Key7 => Key8,
+                Key8 | Key9 => Key9,
+            },
+
+            _ => unimplemented!(),
+        }
+    }
+}
+
+fn solve(input: &[u8]) -> Vec<u8> {
+    let mut key = Key::Key5;
+
     let mut code = Vec::with_capacity(5);
+
     for c in input {
         match c {
-            b'\n' => code.push(pos),
-            b'U' => pos = pos.add(IVec2::Y).clamp(IVec2::NEG_ONE, IVec2::ONE),
-            b'D' => pos = pos.add(IVec2::NEG_Y).clamp(IVec2::NEG_ONE, IVec2::ONE),
-            b'L' => pos = pos.add(IVec2::NEG_X).clamp(IVec2::NEG_ONE, IVec2::ONE),
-            b'R' => {
-                pos = pos.add(IVec2::X).clamp(IVec2::NEG_ONE, IVec2::ONE);
+            b'\n' => {
+                code.push(key.to_ascii());
             }
             _ => {
-                unimplemented!()
+                key = key.go(*c);
             }
         }
     }
 
-    code.iter()
-        .rev()
-        .enumerate()
-        .map(|(i, p)| {
-            let digit = match (p.x, p.y) {
-                (-1, 1) => 1,
-                (0, 1) => 2,
-                (1, 1) => 3,
-                (-1, 0) => 4,
-                (0, 0) => 5,
-                (1, 0) => 6,
-                (-1, -1) => 7,
-                (0, -1) => 8,
-                (1, -1) => 9,
-                _ => unimplemented!(),
-            };
-
-            digit * 10_i32.pow(u32::try_from(i).unwrap_or_default())
-        })
-        .sum()
+    code
 }
 
 #[cfg(test)]
@@ -55,7 +105,7 @@ mod tests {
     #[test]
     fn test_1() {
         let result = solve(b"ULL\nRRDDD\nLURDL\nUUUUD\n");
-        assert_eq!(result, 1985);
+        assert_eq!(result, b"1985");
     }
 }
 

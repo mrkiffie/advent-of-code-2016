@@ -58,3 +58,15 @@ mod tests {
         assert_eq!(result, 1985);
     }
 }
+
+#[cfg(feature = "bench")]
+pub mod benchmarks {
+    use super::INPUT;
+
+    pub fn main() {}
+
+    #[divan::bench()]
+    fn bench_solve() {
+        super::solve(INPUT);
+    }
+}

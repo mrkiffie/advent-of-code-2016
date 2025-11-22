@@ -9,6 +9,7 @@ rust-version = "1.91.0"
 [workspace.dependencies]
 dhat = "0.3.3"
 divan = "0.1.21"
+glam = "0.30.9"
 
 [workspace.lints.clippy]
 pedantic = "warn"

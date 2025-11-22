@@ -24,9 +24,7 @@ mod tests {
 pub mod benchmarks {
     use super::INPUT;
 
-    pub fn main() {
-        divan::main();
-    }
+    pub fn main() {}
 
     #[divan::bench()]
     fn bench_solve() {
